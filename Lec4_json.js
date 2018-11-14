@@ -1,3 +1,13 @@
+class Data {
+    constructor(type, value, child) {
+        this.type = type;
+        this.value = value;
+        this.child = child
+    }
+}
+
+let result = [];
+
 function scan(str) {
     let tokens = [];
     for (let i = 0; i < str.length; i++) {
@@ -70,17 +80,21 @@ function removeBrackets(str) {
 
 
 function parse(str) {
-    let result = {}
-    result.type = checkType(str);
-    if (result.type === 'array') {
+    let type = checkType(str);
+    let child = [];
+    let value = null;
+    if (type === 'array') {
         str = removeBrackets(str);
-        result.child = divideTokens(str);
+        child = divideTokens(str);
+        let data = new Data(type, value, child);
+        result.push(data);
     }
-    if (result.type === 'number') {
-        result.value = divideTokens(str).join('');
-        result.child = [];
-    }
-    return result;
+    if (type === 'number') {
+        value = divideTokens(str).join('');
+        let data = new Data(type, value, child);
+        result.push(data);
+   }
+   return result;
 }
 
 function getResult(str) {
@@ -101,4 +115,4 @@ function getResult(str) {
 //test
 const str = "[123,[22,23,[11,[112233],112],55],33]";
 // const str = "1,[2],3"
-console.log(getResult(str))
+console.log(parse(str))
