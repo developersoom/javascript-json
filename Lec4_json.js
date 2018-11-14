@@ -19,21 +19,46 @@ function divideTokens(str) {
     const tokens = scan(str);
     let values = [];
     let emptyArr = [];
+    let stack = [];
+    let nested = [];
     for (let i = 0; i < tokens.length; i++) {
+        if (tokens[i] === '['){
+           stack.push(1);
+        }
+
+        if (tokens[i] === ']'){
+            stack.pop();
+        }
+
+        if (stack.length){
+            nested.push(tokens[i]);
+            continue;
+        }
+
+        if (stack.length === 0 && nested.length !== 0){
+            nested.push(']')
+            values.push(nested.join(''));
+            nested = [];
+            continue;
+        }
+        
         if (i === tokens.length - 1) {
             emptyArr.push(tokens[i]);
             values.push(emptyArr.join(''));
             break;
         }
-        if (tokens[i] !== ',') {
-            emptyArr.push(tokens[i]);
+
+        if (tokens[i] === ','){
+            if (tokens[i-1] !== ']'){
+            values.push(emptyArr.join(''));
+            emptyArr = [];
+            }
             continue;
         }
-        values.push(emptyArr.join(''));
-        emptyArr = [];
-    }
 
-    return values;
+        emptyArr.push(tokens[i]);
+    }
+    return values
 }
 
 function removeBrackets(str) {
@@ -74,5 +99,6 @@ function getResult(str) {
 }
 
 //test
-const str = '[123,[22],33]'
+const str = "[123,[22,23,[11,[112233],112],55],33]";
+// const str = "1,[2],3"
 console.log(getResult(str))
