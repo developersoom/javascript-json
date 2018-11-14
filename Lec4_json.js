@@ -6,8 +6,6 @@ class Data {
     }
 }
 
-let result = [];
-
 function scan(str) {
     let tokens = [];
     for (let i = 0; i < str.length; i++) {
@@ -87,32 +85,44 @@ function parse(str) {
         str = removeBrackets(str);
         child = divideTokens(str);
         let data = new Data(type, value, child);
-        result.push(data);
+        return data;
     }
     if (type === 'number') {
         value = divideTokens(str).join('');
         let data = new Data(type, value, child);
-        result.push(data);
+        return data;
    }
-   return result;
-}
-
-function getResult(str) {
-    let result = parse(str);
-    if (result.child !== []) {
-        for (let i = 0; i < result.child.length; i++) {
-            result.child[i] = parse(result.child[i]);
-        }
-    }
-    for (let i = 0; i < result.child.length; i++) {
-        if (result.child[i].type === 'array') {
-            result.child[i].child = parse(result.child[i].child)
-        }
-    }
-    return result;
 }
 
 //test
-const str = "[123,[22,23,[11,[112233],112],55],33]";
-// const str = "1,[2],3"
-console.log(parse(str))
+function printResult(){
+    let str = "[123,[22,23,[11,[112233],112],55],33]";
+    let result = [parse(str)];
+    for(let i = 0; i < result.length; i++){
+        if(result[i].child !== []){
+            for(let j = 0; j < result[i].child.length; j++){
+                                            debugger;
+                result[i].child[j] = parse((result[i].child[j]))
+            }
+        }
+    }
+        console.log(result)
+}
+
+printResult()
+
+
+// function getResult(str) {
+//     let result = parse(str);
+//     if (result.child !== []) {
+//         for (let i = 0; i < result.child.length; i++) {
+//             result.child[i] = parse(result.child[i]);
+//         }
+//     }
+//     for (let i = 0; i < result.child.length; i++) {
+//         if (result.child[i].type === 'array') {
+//             result.child[i].child = parse(result.child[i].child)
+//         }
+//     }
+//     return result;
+// }
