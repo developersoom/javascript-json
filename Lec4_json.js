@@ -9,17 +9,17 @@ class Data {
 function scan(str) {
     let tokens = [];
     let stack = "";
-    for (let token of str){
-        if(token === ',' || token === '['){
-            stack === "" ? tokens.push(token) : tokens.push(stack)
+    for (let token of str) {
+        if (token === ',' || token === '[') {
+            stack === "" ? tokens.push(token) : tokens.push(stack);
             stack = "";
             continue;
-            }
-            if(token === ']'){
-                tokens.push(stack);
-                stack = token;
-                continue;
-            }
+        }
+        if (token === ']') {
+            tokens.push(stack);
+            stack = token;
+            continue;
+        }
         stack += token;
     }
     return tokens;
@@ -27,32 +27,29 @@ function scan(str) {
 
 function parse(str) {
     const tokens = scan(str);
-    
+    let result = [];
+
     let type = "";
     let value = "";
     let child = [];
 
-    let result = [];
-
-    for(let token of tokens) {
-       if(token === '['){
-           type = 'array';
-           result.push(new Data(type, value, child));
-       }
-       else if(Number(token)){
-           const lastChild = result[result.length-1].child;
-           type = 'number';
-           value = token;
-           lastChild.push(new Data(type, value));
-           type = "";
-           value = "";
-           child = [];
-       }
-       else if(token === ']' && result.length > 1){
-           const lastData = result.pop();
-           const lastChild = result[result.length-1].child;
-           lastChild.push(lastData);
-       }
+    for (let token of tokens) {
+        if (token === '[') {
+            type = 'array';
+            result.push(new Data(type, value, child));
+        } else if (Number(token)) {
+            const lastChild = result[result.length - 1].child;
+            type = 'number';
+            value = token;
+            lastChild.push(new Data(type, value));
+            type = "";
+            value = "";
+            child = [];
+        } else if (token === ']' && result.length > 1) {
+            const lastData = result.pop();
+            const lastChild = result[result.length - 1].child;
+            lastChild.push(lastData);
+        }
     }
     return result;
 }
