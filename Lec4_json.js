@@ -8,8 +8,19 @@ class Data {
 
 function scan(str) {
     let tokens = [];
+    let stack = "";
     for (let token of str){
-        tokens.push(token);
+        if(token === ',' || token === '['){
+            stack === "" ? tokens.push(token) : tokens.push(stack)
+            stack = "";
+            continue;
+            }
+            if(token === ']'){
+                tokens.push(stack);
+                stack = token;
+                continue;
+            }
+        stack += token;
     }
     return tokens;
 }
