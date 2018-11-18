@@ -33,35 +33,26 @@ function parse(str) {
     let child = [];
 
     let result = [];
-    let continued = false;
 
     for(let token of tokens) {
        if(token === '['){
            type = 'array';
            result.push(new Data(type, value, child));
        }
-       else if(Number(token) && !continued){
+       else if(Number(token)){
            const lastChild = result[result.length-1].child;
            type = 'number';
            value = token;
            lastChild.push(new Data(type, value));
-           continued = true;
-       }
-       else if(Number(token) && continued){
-          const lastChild = result[result.length-1].child;
-          lastChild[lastChild.length-1].value += token;
+           type = "";
+           value = "";
+           child = [];
        }
        else if(token === ']' && result.length > 1){
            const lastData = result.pop();
            const lastChild = result[result.length-1].child;
            lastChild.push(lastData);
        }
-       else if(token === ','){
-          type = "";
-          value = "";
-          child = [];
-          continued = false;
-          }
     }
     return result;
 }
