@@ -28,10 +28,7 @@ function scan(str) {
 function parse(str) {
     const tokens = scan(str);
     let result = [];
-
-    let type = "";
-    let value = "";
-    let child = [];
+    let type = "", value = "", child = [];
 
     for (let token of tokens) {
         if (token === '[') {
@@ -39,12 +36,9 @@ function parse(str) {
             result.push(new Data(type, value, child));
         } else if (Number(token)) {
             const lastChild = result[result.length - 1].child;
-            type = 'number';
-            value = token;
+            type = 'number', value = token;
             lastChild.push(new Data(type, value));
-            type = "";
-            value = "";
-            child = [];
+            type = "", value = "", child = [];
         } else if (token === ']' && result.length > 1) {
             const lastData = result.pop();
             const lastChild = result[result.length - 1].child;
