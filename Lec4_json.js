@@ -10,7 +10,7 @@ function scan(str) {
     let tokens = [];
     let stack = "";
     for (let token of str) {
-        if(token === ' '){
+        if (token === ' ') {
             continue;
         }
         if (token === ',' || token === '[') {
@@ -31,32 +31,38 @@ function scan(str) {
 function parse(str) {
     const tokens = scan(str);
     let result = [];
-    let type = "", value = "", child = [];
+    let type = "",
+        value = "",
+        child = [];
 
     for (let token of tokens) {
         if (token === '[') {
             type = 'array';
             result.push(new Data(type, value, child));
-        } else if (Number(token)) {
+            continue;
+        } if (Number(token)) {
             const lastChild = result[result.length - 1].child;
             type = 'number';
             value = token;
             lastChild.push(new Data(type, value));
             type = "", value = "", child = [];
-        } else if (token === 'null') {
+            continue;
+        } if (token === 'null') {
             const lastChild = result[result.length - 1].child;
             type = 'null';
             value = token;
             lastChild.push(new Data(type, value));
             type = "", value = "", child = [];
-        } else if (token === 'true' || token === 'false') {
+            continue;
+        } if (token === 'true' || token === 'false') {
             const lastChild = result[result.length - 1].child;
             type = 'boolean';
             value = token;
             lastChild.push(new Data(type, value));
             type = "", value = "", child = [];
-        } else if (token[0] === "'" && token[token.length-1] === "'") {
-            if(!countApostrophe(token)) {
+            continue;
+        } if (token[0] === "'" && token[token.length - 1] === "'") {
+            if (!countApostrophe(token)) {
                 console.log(`${token}은 올바른 문자열이 아닙니다.`);
                 return;
             }
@@ -65,27 +71,32 @@ function parse(str) {
             value = token;
             lastChild.push(new Data(type, value));
             type = "", value = "", child = [];
-        } else if (token === ']' && result.length > 1) {
+            continue;
+        } if (token === ']' && result.length > 1) {
             const lastData = result.pop();
             const lastChild = result[result.length - 1].child;
             lastChild.push(lastData);
+            continue;
         }
+        console.log(`${token}은 올바른 문자열이 아닙니다.`);
+        return;
+
     }
     return result;
 }
 
-function countApostrophe(token){
+function countApostrophe(token) {
     let count = 0;
-    for(let letter of token){
-        if(letter === "'") count++;
+    for (let letter of token) {
+        if (letter === "'") count++;
     }
-    if(count === 2)return true;
+    if (count === 2) return true;
     return false;
 }
 
 
 //test
 // var str = "[123,[22,23,[11,[112233],112],55],33]";
-var str = "['1a'3',[22,23,[11,[112233],112],55],33]"
+var str = "['1a3',[22,23,[11,[112233],112],55],3d3]"
 // console.log(parse(str))
 console.log(JSON.stringify(parse(str), null, 2));
