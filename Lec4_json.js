@@ -31,34 +31,25 @@ function scan(str) {
 function parse(str) {
     const tokens = scan(str);
     let result = [];
-    let type = "",
-        value = "",
-        child = [];
+    let type = "", value = "", child = [];
 
     for (let token of tokens) {
         if (token === '[') {
-            type = 'array';
-            result.push(new Data(type, value, child));
+            result.push(new Data('array', value, child));
             continue;
         } if (Number(token)) {
             const lastChild = result[result.length - 1].child;
-            type = 'number';
-            value = token;
-            lastChild.push(new Data(type, value));
+            lastChild.push(new Data('number', token));
             type = "", value = "", child = [];
             continue;
         } if (token === 'null') {
             const lastChild = result[result.length - 1].child;
-            type = 'null';
-            value = token;
-            lastChild.push(new Data(type, value));
+            lastChild.push(new Data('null', token));
             type = "", value = "", child = [];
             continue;
         } if (token === 'true' || token === 'false') {
             const lastChild = result[result.length - 1].child;
-            type = 'boolean';
-            value = token;
-            lastChild.push(new Data(type, value));
+            lastChild.push(new Data('boolean', token));
             type = "", value = "", child = [];
             continue;
         } if (token[0] === "'" && token[token.length - 1] === "'") {
@@ -67,9 +58,7 @@ function parse(str) {
                 return;
             }
             const lastChild = result[result.length - 1].child;
-            type = 'string';
-            value = token;
-            lastChild.push(new Data(type, value));
+            lastChild.push(new Data('string', token));
             type = "", value = "", child = [];
             continue;
         } if (token === ']' && result.length > 1) {
@@ -97,6 +86,6 @@ function countApostrophe(token) {
 
 //test
 // var str = "[123,[22,23,[11,[112233],112],55],33]";
-var str = "['1a3',[22,23,[11,[112233],112],55],3d3]"
+var str = "['1a3',[22,23,[11,[112233],112],55],'3d3']"
 // console.log(parse(str))
 console.log(JSON.stringify(parse(str), null, 2));
