@@ -70,6 +70,15 @@ function parse(str) {
     return result;
 }
 
+function countApostrophe(token){
+    let count = 0;
+    for(let letter of token){
+        if(letter === "'") count++;
+    }
+    if(count === 2)return true;
+    return false;
+}
+
 
 //test
 // var str = "[123,[22,23,[11,[112233],112],55],33]";
