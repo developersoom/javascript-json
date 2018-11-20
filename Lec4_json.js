@@ -14,12 +14,12 @@ function scan(str) {
             continue;
         }
         if (token === ',' || token === '[') {
-            stack === "" ? tokens.push(token.toString()) : tokens.push(stack.toString());
+            stack === "" ? tokens.push(token) : tokens.push(stack);
             stack = "";
             continue;
         }
         if (token === ']') {
-            tokens.push(stack.toString());
+            tokens.push(stack);
             stack = token;
             continue;
         }
@@ -93,6 +93,6 @@ function countApostrophe(token) {
 
 //test
 // var str = "[123,[22,23,[11,[112233],112],55],33]";
-var str = "[d1,[22,23,[11,[112233],112],55],'3d3']"
+var str = "['d1',[22,23,[11,[112233],112],55],'3d3']"
 console.log(parse(str))
 // console.log(JSON.stringify(parse(str), null, 2));
