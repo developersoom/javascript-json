@@ -10,7 +10,7 @@ function scan(str) {
     let tokens = [];
     let stack = "";
     for (let token of str) {
-        if (token === ' ') { } else if (token === ',' || token === '[') {
+        if (token === ',' || token === '[') {
             stack === "" ? tokens.push(token) : tokens.push(stack);
             stack = "";
         } else if (token === ']') {
