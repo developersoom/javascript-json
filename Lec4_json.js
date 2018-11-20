@@ -10,7 +10,7 @@ function scan(str) {
     let tokens = [];
     let stack = "";
     for (let token of str) {
-        if (token === ' ') {} else if (token === ',' || token === '[') {
+        if (token === ' ') { } else if (token === ',' || token === '[') {
             stack === "" ? tokens.push(token) : tokens.push(stack);
             stack = "";
         } else if (token === ']') {
@@ -33,7 +33,7 @@ function parse(str) {
     for (let token of tokens) {
         if (token === '[') {
             result.push(new Data('array', value, child));
-        } else if (Number(token)) {
+        } else if ((!isNaN(Number(token)))) {
             const lastChild = result[result.length - 1].child;
             lastChild.push(new Data('number', token));
             type = "", value = "", child = [];
