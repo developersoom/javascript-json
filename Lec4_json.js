@@ -10,10 +10,10 @@ function scan(str) {
     let tokens = [];
     let stack = "";
     for (let token of str) {
-        if (token === ',' || token === '[') {
+        if (token === ',' || token === '[' || token === '{') {
             stack === "" ? tokens.push(token) : tokens.push(stack);
             stack = "";
-        } else if (token === ']') {
+        } else if (token === ']' || token === '}') {
             tokens.push(stack);
             stack = token;
         } else {
@@ -77,6 +77,7 @@ function countApostrophe(token) {
 
 //test
 // var str = "[123,[22,23,[11,[112233],112],55],33]";
-var str = "['d1',[22,23,[11,[112233],112],55],'3d3']"
-console.log(parse(str))
+// var str = "['d1',[22,23,[11,[112233],112],55],'3d3']"
+var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a:'a'}, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
+console.log(scan(str))
 // console.log(JSON.stringify(parse(str), null, 2));
