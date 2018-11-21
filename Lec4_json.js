@@ -1,8 +1,9 @@
 class Data {
-    constructor(type, value, child) {
+    constructor(type, value, child, key) {
         this.type = type;
-        this.value = value;
-        this.child = child;
+        this.key = key || undefined;
+        this.value = value || undefined;
+        this.child = child || undefined;
     }
 }
 
@@ -10,7 +11,7 @@ function scan(str) {
     let tokens = [];
     let stack = "";
     for (let token of str) {
-        if (stack === ':' && token === '['){
+        if (stack === ':' && token === '[') {
             tokens.push(stack);
             tokens.push(token);
             stack = "";
@@ -20,7 +21,7 @@ function scan(str) {
         } else if (token === ']' || token === '}' || token === ':') {
             tokens.push(stack);
             stack = token;
-        } else if (token === ' '){
+        } else if (token === ' ') {
             continue;
         } else {
             stack += token;
@@ -32,17 +33,23 @@ function scan(str) {
 function parse(str) {
     const tokens = scan(str);
     let result = [];
-    let type = "",
-        value = "",
-        child = [];
-    objectStatus = false;
+    let type = "", value = "", child = []; key = ""; objectStatus = false;
 
     for (let token of tokens) {
-        if (token === '[') {
+        if(token === '[' && objectStatus === true){
+            result[result.length - 1].value = 'array';
+            result[result.length - 1].child = child;
+        } else if(token === ']' && objectStatus === true){
+            continue;
+        } else if (token === '[') {
             result.push(new Data('array', value, child));
         } else if (token === '{') {
-            result.push(new Data('object', value, child));
+            result.push(new Data('object', value, undefined, key));
             objectStatus = true;
+        } else if (objectStatus === true && key === ""){
+            key = token;
+        } else if (objectStatus === true && token === ':'){
+            result[result.length - 1].key = key;
         } else if ((!isNaN(Number(token)))) {
             const lastChild = result[result.length - 1].child;
             lastChild.push(new Data('number', token));
@@ -67,10 +74,11 @@ function parse(str) {
             const lastData = result.pop();
             const lastChild = result[result.length - 1].child;
             lastChild.push(lastData);
-        } else if (token === '}' && result.length > 1) {
+        } else if (token === '}') {
             const lastData = result.pop();
             const lastChild = result[result.length - 1].child;
             lastChild.push(lastData);
+            objectStatus = false;
         } else {
             console.log(`${token}은 올바른 문자열이 아닙니다.`);
             return;
@@ -92,6 +100,8 @@ function countApostrophe(token) {
 //test
 // var str = "[123,[22,23,[11,[112233],112],55],33]";
 // var str = "['d1',[22,23,[11,[112233],112],55],'3d3']"
-var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a:'a'}, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
-console.log(scan(str))
+// var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a:'a'}, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
+var str = "[1,{key: [2,'3']}]"
+// console.log(scan(str))
+console.log(parse(str))
 // console.log(JSON.stringify(parse(str), null, 2));
