@@ -13,9 +13,11 @@ function scan(str) {
         if (token === ',' || token === '[' || token === '{') {
             stack === "" ? tokens.push(token) : tokens.push(stack);
             stack = "";
-        } else if (token === ']' || token === '}') {
+        } else if (token === ']' || token === '}' || token === ':') {
             tokens.push(stack);
             stack = token;
+        } else if (token === ' ') {
+            continue;
         } else {
             stack += token;
         }
@@ -29,10 +31,14 @@ function parse(str) {
     let type = "",
         value = "",
         child = [];
+    objectStatus = false;
 
     for (let token of tokens) {
         if (token === '[') {
             result.push(new Data('array', value, child));
+        } else if (token === '{') {
+            result.push(new Data('object', value, child));
+            objectStatus = true;
         } else if ((!isNaN(Number(token)))) {
             const lastChild = result[result.length - 1].child;
             lastChild.push(new Data('number', token));
@@ -54,6 +60,10 @@ function parse(str) {
             lastChild.push(new Data('string', token));
             type = "", value = "", child = [];
         } else if (token === ']' && result.length > 1) {
+            const lastData = result.pop();
+            const lastChild = result[result.length - 1].child;
+            lastChild.push(lastData);
+        } else if (token === '}' && result.length > 1) {
             const lastData = result.pop();
             const lastChild = result[result.length - 1].child;
             lastChild.push(lastData);
