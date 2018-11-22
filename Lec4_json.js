@@ -26,6 +26,7 @@ function scan(str) {
             stack += token;
         }
     }
+    tokens.push(stack);
     return tokens;
 }
 
@@ -103,5 +104,5 @@ function countApostrophe(token) {
 // var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a:'a'}, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
 var str = "[1,{key: [2,{a: 'a'}}]"
 // console.log(scan(str))
-console.log(parse(str))
+console.log(scan(str))
 // console.log(JSON.stringify(parse(str), null, 2));
