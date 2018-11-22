@@ -26,7 +26,7 @@ function scan(str) {
             stack += token;
         }
     }
-    tokens.push(stack);
+//     tokens.push(stack);
     return tokens;
 }
 
@@ -36,19 +36,22 @@ function parse(str) {
     let type = "", value = "", child = []; key = ""; objectStatus = false;
 
     for (let token of tokens) {
-        if(token === '[' && objectStatus === true){
+        if(token === '[' && objectStatus !== false){
             result[result.length - 1].value = 'array';
             result[result.length - 1].child = child;
-        } else if(token === ']' && objectStatus === true){
+        } else if(objectStatus === 'value' && token !== ':' && token[0] === "'" && token[token.length - 1] === "'"){
+            result[result.length - 1].value = token;
+        } else if(token === ']' && objectStatus !== false){
             continue;
         } else if (token === '[') {
             result.push(new Data('array', value, child));
         } else if (token === '{') {
             result.push(new Data('object', value, undefined, key));
-            objectStatus = true;
-        } else if (objectStatus === true && key === ""){
+            objectStatus = 'key';
+        } else if (objectStatus === 'key'){
             key = token;
-        } else if (objectStatus === true && token === ':'){
+            objectStatus = 'value';
+        } else if (objectStatus === 'value' && token === ':'){
             result[result.length - 1].key = key;
             key = "";
         } else if ((!isNaN(Number(token)))) {
@@ -104,5 +107,5 @@ function countApostrophe(token) {
 // var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a:'a'}, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
 var str = "[1,{key: [2,{a: 'a'}}]"
 // console.log(scan(str))
-console.log(scan(str))
-// console.log(JSON.stringify(parse(str), null, 2));
+// console.log(parse(str))
+console.log(JSON.stringify(parse(str), null, 2));
