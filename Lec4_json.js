@@ -1,46 +1,3 @@
-// class ArrayData {
-//     constructor() {
-//         this.type = 'array';
-//         this.value = "";
-//         this.child = [];
-//     }
-// }
-
-// class ObjectData {
-//     constructor() {
-//         this.type = 'object';
-//         this.key = "";
-//         this.value = undefined;
-//     }
-// }
-
-// class StringData{
-//     constructor(value){
-//         this.type = 'string';
-//         this.value = value;
-//     }
-// }
-
-// class NumberData{
-//     constructor(value){
-//         this.type = 'number';
-//         this.value = value;
-//     }
-// }
-
-// class NullData{
-//     constructor(){
-//         this.type = 'null';
-//         this.value = 'null'
-//     }
-// }
-
-// class BooleanData{
-//     constructor(value){
-//         this.type = 'boolean';
-//         this.value = value;
-//     }
-// }
 class Data {
     constructor(type, value, child) {
         this.type = type;
@@ -75,21 +32,17 @@ function scan(str) {
 function parse(str) {
     const tokens = scan(str);
     let result = [];
-    let type = "", value = "", child = [], objectStatus = false;
+    let temp = "", value = "", child = [], objectStatus = false;
 
-    for (let token of tokens) {
+    for (let token of tokens){
         if (token === '[') {
             result.push(new Data('array', value, child));
         } else if (token === '{') {
             result.push(new Data('object', value, child));
-            objectStatus = 'key'
-        } else if (objectStatus === 'key'){
-            const lastChild = result[result.length - 1].child;
-            lastChild.push(new Data('objectKey', token));
-            type = "", value = "", child = [];
-            objectStatus = false;
+            objectStatus = true;
         } else if (token === ':'){
-            continue;
+            const lastChild = result[result.length - 1].child;
+            lastChild.push(new Data('objectKey', temp));
         } else if (!isNaN(Number(token))) {
             const lastChild = result[result.length - 1].child;
             lastChild.push(new Data('number', token));
@@ -118,12 +71,15 @@ function parse(str) {
             const lastData = result.pop();
             const lastChild = result[result.length - 1].child;
             lastChild.push(lastData);
+            objectStatus = false;
         } else if (token === ']' && result.length === 1) {
             return result;
+        } else if (objectStatus === true && token !== ':'){
+            temp = token;
         } else {
             console.log(`${token}은 올바른 문자열이 아닙니다.`);
             return;
-            }
+        }
     } 
 }
 
@@ -138,7 +94,8 @@ function countApostrophe(token) {
 
 //test
 
-// var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
-var str = "[1,{key: [2,{a:'a'}]}]"
-// console.log(parse(str))
-console.log(JSON.stringify(parse(str), null, 2));
+var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
+// var str = "[1,{a:'str', b:[912,[5656,33]]}]";
+// var str = "[1,{key: [2,{a:'a'}]}]"
+console.log(parse(str))
+// console.log(JSON.stringify(parse(str), null, 2));
