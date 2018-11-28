@@ -35,6 +35,22 @@ const tokenMap = {
     end : {"]" : "array", "}" : "object"}
 }
 
+const tokenChecker = {
+    isStartToken(token){
+        if(Object.keys(tokenMap.start).includes(token)) return tokenMap.start[token];
+    }, 
+    isEndToken(token, result){
+        if(Object.keys(tokenMap.end).includes(token) && result.length > 1) return tokenMap.end[token];
+    },
+    isOtherToken(token){
+        if(Object.keys(tokenMap.others).includes(token)) return tokenMap.others[token];
+        if(token[0] === "'") return tokenMap.others[token[0]];
+        if(!isNaN(Numbers(token))) return "number";
+    },
+    isFinalToken(token, result){
+        if(token === ']' && result.length === 1) return true;
+    }
+}
 function parse(str) {
     const tokens = scan(str);
     let result = [];
