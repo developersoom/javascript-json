@@ -29,6 +29,12 @@ function scan(str) {
     return tokens;
 }
 
+const tokenMap = {
+    others : {":" : "objectKey", "null" : "null", "true" : "boolean", "false" : "boolean", "'" : "string"},
+    start : {"[" : "array", "{" : "object"},
+    end : {"]" : "array", "}" : "object"}
+}
+
 function parse(str) {
     const tokens = scan(str);
     let result = [];
