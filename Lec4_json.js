@@ -81,12 +81,12 @@ function parse(str) {
     for (let token of tokens){
         if (tokenChecker.isFinalToken(token, result)) return result;
         
-        if (tokenType === tokenChecker.isStartToken(token)) parseToken.executeStartToken(result, tokenType);
+        if (tokenType = tokenChecker.isStartToken(token)) parseToken.executeStartToken(result, tokenType);
         
-        else if (tokenType === tokenChecker.isOtherToken(token)) parseToken.executeOtherToken(result, tokenType, token, objectKeyName);
+        else if (tokenType = tokenChecker.isOtherToken(token)) parseToken.executeOtherToken(result, tokenType, token, objectKeyName);
         
-        else if (tokenType === tokenChecker.isEndToken(token, tokenType)) parseToken.executeEndToken(result, tokenType);
-        
+        else if (tokenType = tokenChecker.isEndToken(token, result)) parseToken.executeEndToken(result, tokenType);
+
         else if (objectStatus && token !== ':') objectKeyName = token;
         
         else {console.log(`${token}은 올바른 문자열이 아닙니다.`); return;}
