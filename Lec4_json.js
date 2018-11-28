@@ -59,9 +59,9 @@ const parseToken = {
         result.push(new Data(tokenType, "", []));
         if(tokenType === 'object') objectStatus = true;
     },
-    executeOtherToken(result, tokenType, token, temp){
+    executeOtherToken(result, tokenType, token, objectKeyName){
         const lastChild = result[result.length - 1].child;
-        if(tokenType === 'objectKey') lastChild.push(new Data(tokenType, temp));
+        if(tokenType === 'objectKey') lastChild.push(new Data(tokenType, objectKeyName));
         else lastChild.push(new Data(tokenType, token));
     },
     executeEndToken(result, tokenType){
@@ -75,50 +75,21 @@ const parseToken = {
 function parse(str) {
     const tokens = scan(str);
     let result = [];
-    let temp = "", objectStatus = false;
+    let objectKeyName;
+    let tokenType;
 
     for (let token of tokens){
-        if (token === '[') {
-            result.push(new Data('array', "", []));
-        } else if (token === '{') {
-            result.push(new Data('object', "", []));
-            objectStatus = true;
-        } else if (token === ':'){
-            const lastChild = result[result.length - 1].child;
-            lastChild.push(new Data('objectKey', temp));
-        } else if (!isNaN(Number(token))) {
-            const lastChild = result[result.length - 1].child;
-            lastChild.push(new Data('number', token));
-        } else if (token === 'null') {
-            const lastChild = result[result.length - 1].child;
-            lastChild.push(new Data('null', token));
-        } else if (token === 'true' || token === 'false') {
-            const lastChild = result[result.length - 1].child;
-            lastChild.push(new Data('boolean', token));
-        } else if (token[0] === "'") {
-            if (!countApostrophe(token)) {
-                console.log(`${token}은 올바른 문자열이 아닙니다.`);
-                return;
-            }
-            const lastChild = result[result.length - 1].child;
-            lastChild.push(new Data('string', token));
-        } else if (token === ']' && result.length > 1) {
-            const lastData = result.pop();
-            const lastChild = result[result.length - 1].child;
-            lastChild.push(lastData);
-        } else if (token === '}' && result.length > 1) {
-            const lastData = result.pop();
-            const lastChild = result[result.length - 1].child;
-            lastChild.push(lastData);
-            objectStatus = false;
-        } else if (token === ']' && result.length === 1) {
-            return result;
-        } else if (objectStatus === true && token !== ':'){
-            temp = token;
-        } else {
-            console.log(`${token}은 올바른 문자열이 아닙니다.`);
-            return;
-        }
+        if (tokenChecker.isFinalToken(token, result)) return result;
+        
+        if (tokenType === tokenChecker.isStartToken(token)) parseToken.executeStartToken(result, tokenType);
+        
+        else if (tokenType === tokenChecker.isOtherToken(token)) parseToken.executeOtherToken(result, tokenType, token, objectKeyName);
+        
+        else if (tokenType === tokenChecker.isEndToken(token, tokenType)) parseToken.executeEndToken(result, tokenType);
+        
+        else if (objectStatus && token !== ':') objectKeyName = token;
+        
+        else {console.log(`${token}은 올바른 문자열이 아닙니다.`); return;}
     } 
 }
 
