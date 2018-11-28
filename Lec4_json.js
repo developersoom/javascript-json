@@ -54,6 +54,24 @@ const tokenChecker = {
 
 let objectStatus = false;
 
+const parseToken = {
+    executeStartToken(result, tokenType){
+        result.push(new Data(tokenType, "", []));
+        if(tokenType === 'object') objectStatus = true;
+    },
+    executeOtherToken(result, tokenType, token, temp){
+        const lastChild = result[result.length - 1].child;
+        if(tokenType === 'objectKey') lastChild.push(new Data(tokenType, temp));
+        else lastChild.push(new Data(tokenType, token));
+    },
+    executeEndToken(result, tokenType){
+        const lastData = result.pop();
+        const lastChild = result[result.length - 1].child;
+        lastChild.push(lastData);
+        if(tokenType === 'object') objectStatus = false;
+    }
+}
+
 function parse(str) {
     const tokens = scan(str);
     let result = [];
