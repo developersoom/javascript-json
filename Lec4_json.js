@@ -45,7 +45,7 @@ const tokenChecker = {
     isOtherToken(token){
         if(Object.keys(tokenMap.others).includes(token)) return tokenMap.others[token];
         if(token[0] === "'") return tokenMap.others[token[0]];
-        if(!isNaN(Numbers(token))) return "number";
+        if(!isNaN(Number(token))) return "number";
     },
     isFinalToken(token, result){
         if(token === ']' && result.length === 1) return true;
