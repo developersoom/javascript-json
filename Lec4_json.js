@@ -51,6 +51,9 @@ const tokenChecker = {
         if(token === ']' && result.length === 1) return true;
     }
 }
+
+let objectStatus = false;
+
 function parse(str) {
     const tokens = scan(str);
     let result = [];
