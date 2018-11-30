@@ -32,15 +32,16 @@ function scan(str) {
 const tokenMap = {
     others : {":" : "objectKey", "null" : "null", "true" : "boolean", "false" : "boolean", "'" : "string"},
     start : {"[" : "array", "{" : "object"},
-    end : {"]" : "array", "}" : "object"}
+    end : {"]" : "array", "}" : "object"},
+    count : {"[" : 0, "{" : 0, "]" : 0, "}" : 0}
 }
 
 const tokenChecker = {
     isStartToken(token){
-        if(Object.keys(tokenMap.start).includes(token)) return tokenMap.start[token];
+        if(Object.keys(tokenMap.start).includes(token)) tokenMap.count[token]++; return tokenMap.start[token];
     }, 
     isEndToken(token, result){
-        if(Object.keys(tokenMap.end).includes(token) && result.length > 1) return tokenMap.end[token];
+        if(Object.keys(tokenMap.end).includes(token) && result.length > 1) tokenMap.count[token]++; return tokenMap.end[token];
     },
     isOtherToken(token){
         if(Object.keys(tokenMap.others).includes(token)) return tokenMap.others[token];
@@ -48,7 +49,10 @@ const tokenChecker = {
         if(!isNaN(Number(token))) return "number";
     },
     isFinalToken(token, result){
-        if(token === ']' && result.length === 1) return true;
+        if(token === ']' && result.length === 1) {
+            tokenMap.count[token]++;
+            return true;
+        }
     }
 }
 
@@ -72,6 +76,14 @@ const parseToken = {
     }
 }
 
+const errorChecker = {
+    isArrayClosed(){
+        return tokenMap.count["["] === tokenMap.count["]"];
+    },
+    isObjectClosed(){
+        return tokenMap.count["{"] === tokenMap.count["}"];
+    }
+}
 function parse(str) {
     const tokens = scan(str);
     let result = [];
@@ -79,8 +91,11 @@ function parse(str) {
     let tokenType;
 
     for (let token of tokens){
-        if (tokenChecker.isFinalToken(token, result)) return result;
-        
+
+        if (tokenChecker.isFinalToken(token, result) && errorChecker.isArrayClosed() && errorChecker.isObjectClosed()) return result;
+
+        if (tokenChecker.isFinalToken(token, result)) {console.log(`<<error>> 배열이나 객체가 제대로 닫히지 않았습니다.`); return;}
+            
         if (tokenType = tokenChecker.isStartToken(token)) parseToken.executeStartToken(result, tokenType);
         
         else if (tokenType = tokenChecker.isOtherToken(token)) parseToken.executeOtherToken(result, tokenType, token, objectKeyName);
