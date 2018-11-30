@@ -50,9 +50,7 @@ const tokenChecker = {
         if(!isNaN(Number(token))) return "number";
     },
     isFinalToken(token, result){
-        if(token === ']' && result.length === 1) {
-            return true;
-        }
+        if(token === ']' && result.length === 1) return true;
     }
 }
 
@@ -84,14 +82,12 @@ const errorChecker = {
         return tokenMap.count["{"] === tokenMap.count["}"];
     },
     isColonInObject(){
-        return tokenMap.count['{'] === tokenMap.count[":"];
+        return tokenMap.count['{'] <= tokenMap.count[":"];
     }
 }
 function parse(str) {
     const tokens = scan(str);
-    let result = [];
-    let objectKeyName; 
-    let tokenType;
+    let result = [], objectKeyName, tokenType;
 
     for (let i = 0 ; i < tokens.length; i++){
         let token = tokens[i];
@@ -99,8 +95,8 @@ function parse(str) {
         if (i === tokens.length-1) {
             tokenMap.count[token]++;
             if (tokenChecker.isFinalToken(token, result) && errorChecker.isArrayClosed() && errorChecker.isObjectClosed() && errorChecker.isColonInObject()) return result;
-            else if (!errorChecker.isArrayClosed()) {console.log(`정상적으로 종료되지 않은 배열이 있습니다.`); return;}
             else if (!errorChecker.isObjectClosed()) {console.log(`정상적으로 종료되지 않은 객체가 있습니다.`); return;}
+            else if (!errorChecker.isArrayClosed()) {console.log(`정상적으로 종료되지 않은 배열이 있습니다.`); return;}
             else if (!errorChecker.isColonInObject()) {console.log(`':'이 누락된 객체표현이 있습니다.`); return;}
         }
             
@@ -129,7 +125,7 @@ function countApostrophe(token) {
 }
 
 //test
-// var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
-var str = "[{'a' : 'b'}]";
-console.log(parse(str))
-// console.log(JSON.stringify(parse(str), null, 2));
+var str = "['1a3',[null,false,['11',112,'99'], {a:'str', b: [912,[5656,33]], true]";
+// var str = "[{a : 'b'}]";
+// console.log(parse(str))
+console.log(JSON.stringify(parse(str), null, 2));
