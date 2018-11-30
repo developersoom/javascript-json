@@ -65,7 +65,7 @@ const parseToken = {
     },
     executeOtherToken(result, tokenType, token, objectKeyName){
         const lastChild = result[result.length - 1].child;
-        if(tokenType === 'objectKey') lastChild.push(new Data(tokenType, objectKeyName));
+        if(tokenType === 'objectKey') {lastChild.push(new Data(tokenType, objectKeyName));}
         else lastChild.push(new Data(tokenType, token));
     },
     executeEndToken(result, tokenType){
@@ -106,8 +106,11 @@ function parse(str) {
             
         if (tokenType = tokenChecker.isStartToken(token)) parseToken.executeStartToken(result, tokenType);
         
-        else if (tokenType = tokenChecker.isOtherToken(token)) parseToken.executeOtherToken(result, tokenType, token, objectKeyName);
-        
+        else if (tokenType = tokenChecker.isOtherToken(token)) {
+            if(tokenType === 'objectKey' && objectKeyName === undefined){console.log(`올바른 object key 값이 아닙니다.`); return;} 
+            parseToken.executeOtherToken(result, tokenType, token, objectKeyName);
+        } 
+               
         else if (tokenType = tokenChecker.isEndToken(token, result)) parseToken.executeEndToken(result, tokenType);
 
         else if (objectStatus && token !== ':') objectKeyName = token;
@@ -127,6 +130,6 @@ function countApostrophe(token) {
 
 //test
 // var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
-var str = "['1a3', ,{'a': 'b'}]";
+var str = "[{'a' : 'b'}]";
 console.log(parse(str))
 // console.log(JSON.stringify(parse(str), null, 2));
