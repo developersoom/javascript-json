@@ -50,7 +50,6 @@ const tokenChecker = {
     },
     isFinalToken(token, result){
         if(token === ']' && result.length === 1) {
-            tokenMap.count[token]++;
             return true;
         }
     }
@@ -87,14 +86,17 @@ const errorChecker = {
 function parse(str) {
     const tokens = scan(str);
     let result = [];
-    let objectKeyName;
+    let objectKeyName; 
     let tokenType;
 
     for (let token of tokens){
 
-        if (tokenChecker.isFinalToken(token, result) && errorChecker.isArrayClosed() && errorChecker.isObjectClosed()) return result;
-
-        if (tokenChecker.isFinalToken(token, result)) {console.log(`<<error>> 배열이나 객체가 제대로 닫히지 않았습니다.`); return;}
+        if (tokens.indexOf(token) === tokens.length-1) {
+            tokenMap.count[token]++;
+            if (tokenChecker.isFinalToken(token, result) && errorChecker.isArrayClosed() && errorChecker.isObjectClosed()) return result;
+            else if (!errorChecker.isArrayClosed()) {console.log(`정상적으로 종료되지 않은 배열이 있습니다.`); return;}
+            else if (!errorChecker.isObjectClosed()) {console.log(`정상적으로 종료되지 않은 객체가 있습니다.`); return;}
+        }
             
         if (tokenType = tokenChecker.isStartToken(token)) parseToken.executeStartToken(result, tokenType);
         
@@ -104,7 +106,7 @@ function parse(str) {
 
         else if (objectStatus && token !== ':') objectKeyName = token;
         
-        else {console.log(`${token}은 올바른 문자열이 아닙니다.`); return;}
+        else if (!countApostrophe(token)) {console.log(`${token}은 올바른 문자열이 아닙니다.`); return;}
     } 
 }
 
@@ -119,8 +121,7 @@ function countApostrophe(token) {
 
 //test
 
-var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
-// var str = "[1,{a:'str', b:[912,[5656,33]]}]";
-// var str = "[1,{key: [2,{a:'a'}]}]"
-// console.log(parse(str))
-console.log(JSON.stringify(parse(str), null, 2));
+// var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
+var str = "['1a3',{a:b}]";
+console.log(parse(str))
+// console.log(JSON.stringify(parse(str), null, 2));
