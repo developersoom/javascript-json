@@ -89,9 +89,10 @@ function parse(str) {
     let objectKeyName; 
     let tokenType;
 
-    for (let token of tokens){
-
-        if (tokens.indexOf(token) === tokens.length-1) {
+    for (let i = 0 ; i < tokens.length; i++){
+        let token = tokens[i];
+        
+        if (i === tokens.length-1) {
             tokenMap.count[token]++;
             if (tokenChecker.isFinalToken(token, result) && errorChecker.isArrayClosed() && errorChecker.isObjectClosed()) return result;
             else if (!errorChecker.isArrayClosed()) {console.log(`정상적으로 종료되지 않은 배열이 있습니다.`); return;}
@@ -121,7 +122,7 @@ function countApostrophe(token) {
 
 //test
 
-// var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
-var str = "['1a3',{a:b}]";
-console.log(parse(str))
-// console.log(JSON.stringify(parse(str), null, 2));
+var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
+// var str = "['1a3',{a:b}]";
+// console.log(parse(str))
+console.log(JSON.stringify(parse(str), null, 2));
