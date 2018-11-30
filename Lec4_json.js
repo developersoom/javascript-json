@@ -44,6 +44,7 @@ const tokenChecker = {
         if(Object.keys(tokenMap.end).includes(token) && result.length > 1) tokenMap.count[token]++; return tokenMap.end[token];
     },
     isOtherToken(token){
+        if(token === ":") tokenMap.count[':']++;
         if(Object.keys(tokenMap.others).includes(token)) return tokenMap.others[token];
         if(token[0] === "'") return tokenMap.others[token[0]];
         if(!isNaN(Number(token))) return "number";
@@ -125,8 +126,7 @@ function countApostrophe(token) {
 }
 
 //test
-
 // var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
-var str = "['1a3',{a 'b'}]";
+var str = "['1a3', ,{'a': 'b'}]";
 console.log(parse(str))
 // console.log(JSON.stringify(parse(str), null, 2));
