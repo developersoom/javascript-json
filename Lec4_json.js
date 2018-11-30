@@ -65,7 +65,7 @@ const parseToken = {
     },
     executeOtherToken(result, tokenType, token, objectKeyName){
         const lastChild = result[result.length - 1].child;
-        if(tokenType === 'objectKey') {lastChild.push(new Data(tokenType, objectKeyName));}
+        if(tokenType === 'objectKey') lastChild.push(new Data(tokenType, objectKeyName));
         else lastChild.push(new Data(tokenType, token));
     },
     executeEndToken(result, tokenType){
@@ -110,7 +110,7 @@ function parse(str) {
             if(tokenType === 'objectKey' && objectKeyName === undefined){console.log(`올바른 object key 값이 아닙니다.`); return;} 
             parseToken.executeOtherToken(result, tokenType, token, objectKeyName);
         } 
-               
+
         else if (tokenType = tokenChecker.isEndToken(token, result)) parseToken.executeEndToken(result, tokenType);
 
         else if (objectStatus && token !== ':') objectKeyName = token;
