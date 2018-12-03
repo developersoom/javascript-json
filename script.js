@@ -1,6 +1,31 @@
 const scan = require('./scan.js');
 const tokenChecker = require('./tokenChecker.js');
-const parseToken = require('./parseToken.js');
+
+class Data {
+    constructor(type, value, child) {
+        this.type = type;
+        this.value = value;
+        this.child = child;
+    }
+}
+
+const parseToken = {
+    executeStartToken(result, tokenType){
+        result.push(new Data(tokenType, "", []));
+        if(tokenType === 'object') objectStatus = true;
+    },
+    executeOtherToken(result, tokenType, token, objectKeyName){
+        const lastChild = result[result.length - 1].child;
+        if(tokenType === 'objectKey') lastChild.push(new Data(tokenType, objectKeyName));
+        else lastChild.push(new Data(tokenType, token));
+    },
+    executeEndToken(result, tokenType){
+        const lastData = result.pop();
+        const lastChild = result[result.length - 1].child;
+        lastChild.push(lastData);
+        if(tokenType === 'object') objectStatus = false;
+    }
+}
 
 let objectStatus = false;
 
@@ -25,9 +50,9 @@ function parse(str) {
 
 //test
 
-// var str = "['1a3',[null,false,['11',[112233],{easy : ['hello', {a: 'a' }, 'world']},112],55, '99'],{a:'str', b:[912,[5656,33],{key : 'innervalue', newkeys: [1,2,3,4,5]}]}, true]";
+var str = "['1a3',[null,false,['11',112,'99'], {a:'str', b: [912,[5656,33]], true}]]";
 // var str = "[1,{a:'str', b:[912,[5656,33]]}]";
-var str = "[1,{key: [2,{a:'a'}]}]"
+// var str = "[1,{key: [2,{a:'a'}]}]"
 // var str = "[23,234, '[123]' , 2344]";
 // console.log(parse(str))
 console.log(JSON.stringify(parse(str), null, 2));
