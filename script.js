@@ -50,9 +50,10 @@ function parse(str) {
 
 //test
 
-var str = "['1a3',[null,false,['11',112,'99'], {a:'str', b: [912,[5656,33]], true}]]";
+// var str = "['1a3',[null,false,['11',112,'99'], {a:'str', b: [912,[5656,33]], true}]]";
 // var str = "[1,{a:'str', b:[912,[5656,33]]}]";
 // var str = "[1,{key: [2,{a:'a'}]}]"
-// var str = "[23,234, '[123]' , 2344]";
+var str = "[23,234, '[123]' , 2344]";
+
 // console.log(parse(str))
 console.log(JSON.stringify(parse(str), null, 2));
