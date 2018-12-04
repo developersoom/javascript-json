@@ -10,6 +10,8 @@ class Data {
 }
 
 const parseToken = {
+    objectStatus : false,
+
     executeStartToken(result, tokenType){
         result.push(new Data(tokenType, "", []));
         if(tokenType === 'object') objectStatus = true;
@@ -26,8 +28,6 @@ const parseToken = {
         if(tokenType === 'object') objectStatus = false;
     }
 }
-
-let objectStatus = false;
 
 function parse(str) {
     const tokens = scan(str);
@@ -52,8 +52,14 @@ function parse(str) {
 
 // var str = "['1a3',[null,false,['11',112,'99'], {a:'str', b: [912,[5656,33]], true}]]";
 // var str = "[1,{a:'str', b:[912,[5656,33]]}]";
-// var str = "[1,{key: [2,{a:'a'}]}]"
-var str = "[23,234, '[123]' , 2344]";
+var str = "[1,{key: [2,{a:'a'}]}]"
+// var str = "[23,234, '[123]' , 2344]";
+// var str = "[1,2]";
 
-// console.log(parse(str))
-console.log(JSON.stringify(parse(str), null, 2));
+console.log(parse(str)[0].child[1].type)
+// console.log(JSON.stringify(parse(str), null, 2));
+
+
+module.exports.Data = Data;
+module.exports.parseToken = parseToken;
+module.exports.parse = parse;
