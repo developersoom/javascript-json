@@ -1,5 +1,5 @@
 const scan = require('./scan.js');
-const tokenChecker = require('./tokenChecker.js');
+const {tokenChecker, tokenMap, countApostrophe} = require('./tokenChecker.js');
 
 class Data {
     constructor(type, value, child) {
