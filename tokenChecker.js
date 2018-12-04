@@ -33,4 +33,6 @@ function countApostrophe(token) {
     return false;
 }
 
-module.exports = tokenChecker
+module.exports.tokenMap = tokenMap;
+module.exports.tokenChecker = tokenChecker;
+module.exports.countApostrophe = countApostrophe;
