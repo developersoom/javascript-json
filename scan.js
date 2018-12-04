@@ -1,29 +1,40 @@
-function scan(str) {
-    let tokens = [];
-    let stack = "";
-    let stringOpened = false;
-    for (let token of str) {
-        if (token === '[' && stringOpened === false || token === '{' && stringOpened === false) {
-            stack === "" ? tokens.push(token) : tokens.push(stack);
-            stack = "";
-        } else if (token === "'") {
-            stack += token;
-            if (stringOpened === true) stringOpened = false;
-            else if (stringOpened === false) stringOpened = true;
-        } else if (token === ',' && stringOpened === false) {
-            if (stack !== "") tokens.push(stack);
-            stack = "";
-        } else if (token === ']' && stringOpened === false || token === '}' && stringOpened === false || token === ':') {
-            if (stack !== "") tokens.push(stack)
-            tokens.push(token);
-            stack = "";
-        } else if (token === ' ') {
-            continue;
-        } else {
-            stack += token;
+class Scan {
+    constructor(str) {
+        this.str = str;
+        this.tokens = [];
+        this.stack = "";
+        this.stringOpened = false;
+        this.tokenMap = {
+            end: ["]", "}"],
+            dividingPoints: ["[", "]", "{", "}", ":", ","]
         }
     }
-    return tokens;
+    tokenize() {
+        for (let token of this.str) {
+            if (token === " ") {
+                continue;
+            }
+            if (!this.stringOpened && this.tokenMap.dividingPoints.includes(token)) {
+                this.isDivididingPoints(this.tokens, token, this.stack, this.stringOpened)
+            } else if (this.token === "'") {
+                this.stack += token;
+                this.stringOpened = (this.stringOpened) ? false : true;
+            } else if (!this.tokenMap.dividingPoints.includes(token)) {
+                this.stack += token;
+            }
+        }
+        return this.tokens;
+    };
+    setTokens(tokens, token, stack) {
+        this.stack.length ? this.tokens.push(stack) : this.tokens.push(token);
+        return this.tokens;
+    };
+    isDivididingPoints(tokens, token, stack, stringOpened) {
+        this.setTokens(tokens, token, stack);
+        this.stack = "";
+        if (!stringOpened && this.tokenMap.end.includes(token) || token === ':') {
+            tokens.push(token);
+        }
+    }
 }
-
-module.exports = scan
+module.exports = Scan

@@ -1,4 +1,4 @@
-const scan = require('./scan.js');
+const Scan = require('./scan.js');
 const {tokenChecker, tokenMap, countApostrophe} = require('./tokenChecker.js');
 
 class Data {
@@ -8,9 +8,9 @@ class Data {
         this.child = child;
     }
 }
+let objectStatus = false;
 
 const parseToken = {
-    objectStatus : false,
 
     executeStartToken(result, tokenType){
         result.push(new Data(tokenType, "", []));
@@ -30,7 +30,7 @@ const parseToken = {
 }
 
 function parse(str) {
-    const tokens = scan(str);
+    const tokens = scan.tokenize(str);
     let result = [];
     let objectKeyName;
     let tokenType;
@@ -52,14 +52,14 @@ function parse(str) {
 
 // var str = "['1a3',[null,false,['11',112,'99'], {a:'str', b: [912,[5656,33]], true}]]";
 // var str = "[1,{a:'str', b:[912,[5656,33]]}]";
-var str = "[1,{key: [2,{a:'a'}]}]"
-// var str = "[23,234, '[123]' , 2344]";
-// var str = "[1,2]";
+const str = "[1,{key: [2,{a:'a'}]}]"
+const scan = new Scan(str);
 
-console.log(parse(str)[0].child[1].type)
-// console.log(JSON.stringify(parse(str), null, 2));
+// console.log(scan(str))
+console.log(JSON.stringify(parse(str), null, 2));
 
 
 module.exports.Data = Data;
 module.exports.parseToken = parseToken;
 module.exports.parse = parse;
+module.exports.objectStatus = objectStatus;
