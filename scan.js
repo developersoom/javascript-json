@@ -1,6 +1,5 @@
 class Scan {
-    constructor(str) {
-        this.str = str;
+    constructor() {
         this.tokens = [];
         this.stack = "";
         this.stringOpened = false;
@@ -9,13 +8,12 @@ class Scan {
             dividingPoints: ["[", "]", "{", "}", ":", ","]
         }
     }
-    tokenize() {
-        for (let token of this.str) {
-            if (token === " ") {
-                continue;
-            }
+
+    tokenize(str) {
+        for (let token of str) {
+            if (token === " ") {continue;}
             if (!this.stringOpened && this.tokenMap.dividingPoints.includes(token)) {
-                this.isDivididingPoints(this.tokens, token, this.stack, this.stringOpened)
+                this.isDivididingPoints(this.tokens, token, this.stack, this.stringOpened);
             } else if (this.token === "'") {
                 this.stack += token;
                 this.stringOpened = (this.stringOpened) ? false : true;
@@ -25,10 +23,12 @@ class Scan {
         }
         return this.tokens;
     };
+
     setTokens(tokens, token, stack) {
-        this.stack.length ? this.tokens.push(stack) : this.tokens.push(token);
-        return this.tokens;
+        stack.length ? tokens.push(stack) : tokens.push(token);
+        return tokens;
     };
+
     isDivididingPoints(tokens, token, stack, stringOpened) {
         this.setTokens(tokens, token, stack);
         this.stack = "";
@@ -37,4 +37,5 @@ class Scan {
         }
     }
 }
+
 module.exports = Scan
