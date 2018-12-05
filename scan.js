@@ -38,10 +38,4 @@ class Scan {
     };
 }
 
-// const str = "['1[2']"
-const str = "['[123]']";
-const scan = new Scan();
-
-console.log(scan.tokenize(str))
-
 module.exports = Scan

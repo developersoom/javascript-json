@@ -1,29 +1,17 @@
 const Scan = require('./scan.js');
 const testSet = require('./testSet.js');
 
-const scan = new Scan();
 
-testSet.test("<문자열에 ('[1, 2]')가 들어오면 분석한 배열 tokens의 길이는 4이다>", function () {
-    const str = "[1, 2]";
-    const result = scan.tokenize(str).length;
-    return testSet.expect(4).toBe(result);
+testSet.test("<(')로 감싸진 문자열내에 대괄호([,])가 들어오면 배열로 인식하지 않는다.>", function () {
+    const scan = new Scan();
+    const str = "['[12[3]']";
+    const result = scan.tokenize(str)[1]
+    return testSet.expect("'[12[3]'").toBe(result);
 });
 
-testSet.test("<문자열에 ('[1[2]')가 들어오면 분석한 배열 tokens의 길이는 3이다>", function () {
-    const str = "'[1[2]'";
-    console.log(scan.tokenize(str))
-    const result = scan.tokenize(str).length;
-    return testSet.expect(0).toBe(result);
-});
-
-testSet.test("<문자열에 (공백)이 들어오면 분석한 배열 tokens의 길이는 0이다>", function () {
-    const str = " ";
-    const result = scan.tokenize(str).length;
-    return testSet.expect(0).toBe(result);
-});
-
-testSet.test("<문자열에 '{key: value}' 들어오면 분석한 배열 tokens의 길이는 5이다>", function () {
-    const str = "{key: value}";
-    const result = scan.tokenize(str).length;
-    return testSet.expect(5).toBe(result);
+testSet.test("<(')로 감싸진 문자열내에 콤마(,)가 들어오면 dividing point로 인식하지 않는다.>", function () {
+    const scan = new Scan();
+    const str = "['1,2']";
+    const result = scan.tokenize(str)[1];
+    return testSet.expect("'1,2'").toBe(result);
 });
