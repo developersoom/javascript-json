@@ -14,19 +14,14 @@ class Scan {
             if (token === " ") {continue;}
             if (!this.stringOpened && this.tokenMap.dividingPoints.includes(token)) {
                 this.isDivididingPoints(this.tokens, token, this.stack, this.stringOpened);
-            } else if (this.token === "'") {
+            } else if (token === "'") {
                 this.stack += token;
                 this.stringOpened = (this.stringOpened) ? false : true;
-            } else if (!this.tokenMap.dividingPoints.includes(token)) {
-                this.stack += token;
+            } else if (!this.tokenMap.dividingPoints.includes(token) || this.stringOpened) {
+                this.stack += token;        
             }
         }
         return this.tokens;
-    };
-
-    setTokens(tokens, token, stack) {
-        stack.length ? tokens.push(stack) : tokens.push(token);
-        return tokens;
     };
 
     isDivididingPoints(tokens, token, stack, stringOpened) {
@@ -36,6 +31,17 @@ class Scan {
             tokens.push(token);
         }
     }
+
+    setTokens(tokens, token, stack) {
+        stack.length ? tokens.push(stack) : tokens.push(token);
+        return tokens;
+    };
 }
+
+// const str = "['1[2']"
+const str = "['[123]']";
+const scan = new Scan();
+
+console.log(scan.tokenize(str))
 
 module.exports = Scan

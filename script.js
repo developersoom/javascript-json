@@ -52,11 +52,12 @@ function parse(str) {
 
 // var str = "['1a3',[null,false,['11',112,'99'], {a:'str', b: [912,[5656,33]], true}]]";
 // var str = "[1,{a:'str', b:[912,[5656,33]]}]";
-const str = "[1,{key: [2,{a:'a'}]}]"
+const str = "['1,{key: [2,{a:'a'}]}']"
+// const str = "'[1[2]'"
 const scan = new Scan();
 
 // console.log(scan(str))
-console.log(JSON.stringify(parse(str), null, 2));
+// console.log(JSON.stringify(parse(str), null, 2));
 
 
 module.exports.Data = Data;

@@ -11,6 +11,7 @@ testSet.test("<문자열에 ('[1, 2]')가 들어오면 분석한 배열 tokens�
 
 testSet.test("<문자열에 ('[1[2]')가 들어오면 분석한 배열 tokens의 길이는 3이다>", function () {
     const str = "'[1[2]'";
+    console.log(scan.tokenize(str))
     const result = scan.tokenize(str).length;
     return testSet.expect(0).toBe(result);
 });
