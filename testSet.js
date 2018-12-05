@@ -1,21 +1,25 @@
 const testSet = {
 testObj : {
-    targetValue: undefined,
-    toBe(resultValue){
-        this.resultValue = resultValue;
-        if(this.targetValue === resultValue) return 'OK'
+    testValue: undefined,
+    toBe(targetValue){
+        this.targetValue = targetValue;
+        if(this.testValue === targetValue) return 'OK'
         return 'FAIL'
-    }
+    },
+    // toBeSameObj(TestObj, resultObj){
+    //         const type = Objec.
+    //     return true;
+    // }
 },
   
-expect(targetValue) {
-    this.testObj.targetValue = targetValue;
+expect(testValue) {
+    this.testObj.testValue = testValue;
     return this.testObj;
 },
   
 test(msg, fn){
     const result = fn();
-    const printMsg = `${msg} : ${result} (targetValue is ${this.testObj.targetValue}, resultValue is ${this.testObj.resultValue})`;
+    const printMsg = `${msg} : ${result} (testValue is ${this.testObj.testValue}, targetValue is ${this.testObj.targetValue})`;
     console.log(printMsg);
    }
 }
