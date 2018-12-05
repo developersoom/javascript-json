@@ -51,9 +51,9 @@ function parse(str) {
 //test
 
 // var str = "['1a3',[null,false,['11',112,'99'], {a:'str', b: [912,[5656,33]], true}]]";
-// var str = "[1,{a:'str', b:[912,[5656,33]]}]";
+var str = "[1,{a:'str', b:[912,[5656,33]]}]";
 // const str = "['1,{key: [2,{a:'a'}]}']"
-const str = "[23,234, '[123]' , 2344]";
+// const str = "[23,234, '[123]' , 2344]";
 const scan = new Scan();
 
 // console.log(scan(str))

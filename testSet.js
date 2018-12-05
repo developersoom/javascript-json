@@ -10,7 +10,6 @@ const testSet = {
             this.targetValue = target;
             const type = Object.prototype.toString.call(test);
             if (type !== Object.prototype.toString.call(target)) return 'FALSE';
-            // if (['[object Array]','[object Object]'].indexOf(type) < 0) return 'FALSE';
 
             const testLen = type === '[object Array]' ? test.length : Object.keys(test).length;
             const targetLen = type === '[object Array]' ? target.length : Object.keys(target).length;
@@ -27,7 +26,6 @@ const testSet = {
                     }
                 }
 
-                // let match; 
                 for (let i = 0; i < testLen; i++) {
                     if (compare(test[i], target[i]) === 'FALSE') return 'FALSE';
                 }
