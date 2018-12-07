@@ -1,20 +1,22 @@
 const testSet = {
     testObj: { 
         targetValue: undefined,
-        test: undefined,
+        testValue: undefined,
         toBe(targetValue) {
             this.targetValue = targetValue;
             if (this.testValue === targetValue) return 'OK'
             return 'FAIL'
         },
-        toBeSame(target) {
-            this.targetValue = target;
-            const test = this.test;
+        toBeSame(targetValue) {
+            this.targetValue = targetValue
+            const test = this.testValue;
             const type = Object.prototype.toString.call(test);
-            if (type !== Object.prototype.toString.call(target)) return 'FALSE';
+            if (type !== Object.prototype.toString.call(targetValue)) return 'FALSE';
+
+            if (type !== '[object Array]') return this.toBe(targetValue);
 
             const testLen = type === '[object Array]' ? test.length : Object.keys(test).length;
-            const targetLen = type === '[object Array]' ? target.length : Object.keys(target).length;
+            const targetLen = type === '[object Array]' ? targetValue.length : Object.keys(targetValue).length;
             if (testLen !== targetLen) return 'FALSE';
 
             const compare = function (item1, item2) {
@@ -29,7 +31,7 @@ const testSet = {
                 }
 
                 for (let i = 0; i < testLen; i++) {
-                    if (compare(test[i], target[i]) === 'FALSE') return 'FALSE';
+                    if (compare(test[i], targetValue[i]) === 'FALSE') return 'FALSE';
                 }
             }
             return 'TRUE'

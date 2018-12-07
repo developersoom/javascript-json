@@ -29,6 +29,5 @@ const testData = [
 testSet.test("<문자열이 올바르게 파싱된다>", function () {
     const str = "[23,234, '[123]' , 2344]";
     const result = parse(str);
-    testSet.testObj.test = testData;
     return testSet.expect(testData).toBeSame(result);
 });
