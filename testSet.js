@@ -1,13 +1,15 @@
 const testSet = {
-    testObj: {
+    testObj: { 
         targetValue: undefined,
+        test: undefined,
         toBe(targetValue) {
             this.targetValue = targetValue;
             if (this.testValue === targetValue) return 'OK'
             return 'FAIL'
         },
-        toBeSame(test, target) {
+        toBeSame(target) {
             this.targetValue = target;
+            const test = this.test;
             const type = Object.prototype.toString.call(test);
             if (type !== Object.prototype.toString.call(target)) return 'FALSE';
 
