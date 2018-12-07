@@ -26,11 +26,15 @@ const tokenChecker = {
 
 function countApostrophe(token) {
     let count = 0;
-    for (let letter of token) {
-        if (letter === "'") count++;
-    }
-    if (count === 2) return true;
+    const correctNumApostrophe = 2;
+    for (let letter of token) count = isApostrophe(letter, count)
+    if (count === correctNumApostrophe) return true;
     return false;
+}
+
+function isApostrophe(letter, count){
+    if (letter === "'") count++;
+    return count;
 }
 
 module.exports.tokenMap = tokenMap;
