@@ -29,11 +29,11 @@ const testSet = {
                         if (item1 !== item2) return 'FALSE';
                     }
                 }
+            }
 
                 for (let i = 0; i < testLen; i++) {
                     if (compare(test[i], targetValue[i]) === 'FALSE') return 'FALSE';
                 }
-            }
             return 'TRUE'
         }
     },
